@@ -3,10 +3,17 @@ class Mario {
     this.x = x;
     this.y = y;
     this.dir = 1;
+    this.isMoving = false;
   }
 
   move() {
-    this.x += (this.dir * 20);    
+    if (this.isMoving) {
+      this.x += (this.dir * 20);    
+    }
+  }
+
+  setMoving(isMoving) {
+    this.isMoving = isMoving;
   }
 
   setDirection(dir) {

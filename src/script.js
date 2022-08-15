@@ -18,7 +18,7 @@ function preload() {
 }
 
 function setup() {
-  frameRate(10);
+  frameRate(20);
   sideSize = windowWidth > windowHeight ? windowHeight - 20 : windowWidth - 20;
   marioY = (sideSize / 3) * 2;
   mario = new Mario(0, marioY);
@@ -29,8 +29,22 @@ function draw () {
   background(175);
   const dir = mario.dir < 0 ? 'l' : 'r';
 
-  image(img[`mario_${dir}${moving ? 'w' : ''}`], mario.x, mario.y, marioWidth, marioHeight);
+  if (keyIsDown(LEFT_ARROW)) {
+    mario.setDirection(-1);
+    mario.setMoving(true);
+  } else if (keyIsDown(RIGHT_ARROW)) {
+    mario.setDirection(1);
+    mario.setMoving(true);
+  }
+
+  mario.move();
+
+  image(img[`mario_${dir}${mario.isMoving ? 'w' : ''}`], mario.x, mario.y, marioWidth, marioHeight);
   for (let i = 0; i < sideSize; i = i + 100) {
     image(img.block, i, marioY + 175, 100, 100);
   }
-} 
+}
+
+function keyReleased() {
+  mario.setMoving(false);
+}
