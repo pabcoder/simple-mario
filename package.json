@@ -1,0 +1,23 @@
+{
+  "name": "simple-mario",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/pabcoder/simple-mario.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/pabcoder/simple-mario/issues"
+  },
+  "homepage": "https://github.com/pabcoder/simple-mario#readme",
+  "dependencies": {
+    "p5": "^1.4.2"
+  }
+}
