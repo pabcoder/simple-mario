@@ -2,10 +2,23 @@ let sideSize;
 let img;
 let mario;
 let moving = false;
-let currentStep = 1;
-let marioHeight = 175;
-let marioWidth = 100;
+let currentStep;
+let marioHeight;
+let marioWidth;
 let marioY;
+let screenRatio;
+
+let blockSide;
+let blockY;
+
+let blocks = [];
+
+const initialSizes = {
+  movingDistance: 20,
+  marioHeight: 175,
+  marioWidth: 100,
+  blockSide: 100
+}
 
 function preload() {
   img = {
@@ -13,36 +26,65 @@ function preload() {
     mario_rw: loadImage('../assets/mario_rw.gif'),
     mario_l: loadImage('../assets/mario_l.png'),
     mario_lw: loadImage('../assets/mario_lw.gif'),
-    block: loadImage('../assets/block.png')
+    block: loadImage('../assets/block.png'),
+    cloud: loadImage('../assets/cloud.png')
   }
 }
 
 function setup() {
-  frameRate(20);
+  frameRate(30);
   sideSize = windowWidth > windowHeight ? windowHeight - 20 : windowWidth - 20;
-  marioY = (sideSize / 3) * 2;
-  mario = new Mario(0, marioY);
+  blockSide = (sideSize / 12),
+  screenRatio = blockSide / initialSizes.blockSide;
+  
+  marioHeight = initialSizes.marioHeight * screenRatio;
+  marioWidth = initialSizes.marioWidth * screenRatio;
+
+  blockY = sideSize - (blockSide * 2);
+  marioY = (sideSize - (blockSide * 2)) - marioHeight;
+
+  mario = new Mario({
+    x: 0,
+    y: marioY,
+    width: marioWidth,
+    height: marioHeight,
+    movingDistance: (initialSizes.movingDistance * screenRatio),
+    img: (({ mario_r, mario_rw, mario_l, mario_lw }) => ({ mario_r, mario_rw, mario_l, mario_lw }))(img)
+  });
+
+  for (let i = 0; i < 12; i++) {
+    blocks.push(
+      new Item(
+        i * blockSide,
+        blockY,
+        blockSide,
+        blockSide,
+        img.block
+      )
+    )
+  }
+
   createCanvas(sideSize, sideSize);
 }
 
 function draw () {
-  background(175);
-  const dir = mario.dir < 0 ? 'l' : 'r';
+  background(92, 148, 252);
 
-  if (keyIsDown(LEFT_ARROW)) {
-    mario.setDirection(-1);
-    mario.setMoving(true);
-  } else if (keyIsDown(RIGHT_ARROW)) {
-    mario.setDirection(1);
-    mario.setMoving(true);
+  if (!mario.isMoving) {
+    if (keyIsDown(LEFT_ARROW)) {
+      mario.setDirection(-1);
+      mario.setMoving(true);
+    } else if (keyIsDown(RIGHT_ARROW)) {
+      mario.setDirection(1);
+      mario.setMoving(true);
+    }
+  } else {
+    mario.move();
   }
-
-  mario.move();
-
-  image(img[`mario_${dir}${mario.isMoving ? 'w' : ''}`], mario.x, mario.y, marioWidth, marioHeight);
-  for (let i = 0; i < sideSize; i = i + 100) {
-    image(img.block, i, marioY + 175, 100, 100);
-  }
+  
+  mario.show();
+  
+  blocks.forEach(b => b.show());
 }
 
 function keyReleased() {
